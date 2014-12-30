@@ -41,13 +41,15 @@ class tombola_window : public Gtk::ApplicationWindow
 		Gtk::Box m_Application_Box;
 		Gtk::Box main_box;
 		Gtk::Box command_box;
-		Gtk::Statusbar status_bar;
 		Gtk::Grid outer_grid;
 		Gtk::Frame card_frame[6];
 		Gtk::Grid card_grid[6];
-		Gtk::Button number[90];
+		Gtk::Entry number[90];
 		Gtk::Button extract;
 		Gtk::Entry current_number;
+		Glib::Timer timer;
+
+		static const Gdk::RGBA number_color[6];
 
 		inline unsigned short get_card(unsigned short n) {return (n / 30) * 2 + (n % 10) / 5;};
 		inline unsigned short get_card_column(unsigned short n) {return n % 5;};

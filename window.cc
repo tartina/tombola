@@ -29,13 +29,17 @@
 #error We need boost lexical_cast
 #endif
 
+#ifdef HAVE_DEBUG
+#include <iostream>
+#endif
+
 #include "window.h"
 #include "about.h"
 
 tombola_window::tombola_window()
 	: m_Application_Box(Gtk::ORIENTATION_VERTICAL),
-	main_box(Gtk::ORIENTATION_HORIZONTAL, 5),
-	command_box(Gtk::ORIENTATION_VERTICAL, 5),
+	main_box(Gtk::ORIENTATION_HORIZONTAL, 2),
+	command_box(Gtk::ORIENTATION_VERTICAL, 2),
 	extract("Estrai")
 {
 	unsigned short i;
@@ -70,13 +74,15 @@ tombola_window::tombola_window()
 	add(m_Application_Box);
 
 	m_refActionGroup = Gtk::ActionGroup::create();
-	m_refActionGroup->add( Gtk::Action::create("MenuFile", "_File") );
-	m_refActionGroup->add( Gtk::Action::create("Start", "_Start"),
+	m_refActionGroup->add( Gtk::Action::create("MenuFile", "_Programma") );
+	m_refActionGroup->add( Gtk::Action::create("Inizia", "_Inizia"),
 		sigc::mem_fun(*this, &tombola_window::on_action_file_start) );
-	m_refActionGroup->add( Gtk::Action::create("Quit", "_Quit"),
+	m_refActionGroup->add( Gtk::Action::create("Estrai", "_Estrai"),
+		sigc::mem_fun(*this, &tombola_window::on_extract_button_clicked) );
+	m_refActionGroup->add( Gtk::Action::create("Esci", "E_sci"),
 		sigc::mem_fun(*this, &tombola_window::on_action_file_quit) );
-	m_refActionGroup->add( Gtk::Action::create("MenuHelp", "_Help") );
-	m_refActionGroup->add( Gtk::Action::create("About", "_About"),
+	m_refActionGroup->add( Gtk::Action::create("MenuHelp", "_Aiuto") );
+	m_refActionGroup->add( Gtk::Action::create("Informazioni", "_Informazioni"),
 		sigc::mem_fun(*this, &tombola_window::on_action_help_about) );
 
 	m_refUIManager = Gtk::UIManager::create();
@@ -87,12 +93,13 @@ tombola_window::tombola_window()
 		"<ui>"
 		"  <menubar name='MenuBar'>"
 		"    <menu action='MenuFile'>"
-		"      <menuitem action='Start'/>"
+		"      <menuitem action='Inizia'/>"
+		"      <menuitem action='Estrai'/>"
 		"      <separator/>"
-		"      <menuitem action='Quit'/>"
+		"      <menuitem action='Esci'/>"
 		"    </menu>"
 		"    <menu action='MenuHelp'>"
-		"      <menuitem action='About'/>"
+		"      <menuitem action='Informazioni'/>"
 		"    </menu>"
 		"  </menubar>"
 		"</ui>";
@@ -103,20 +110,23 @@ tombola_window::tombola_window()
 	m_Application_Box.pack_start(*pMenubar, Gtk::PACK_SHRINK);
 
 	for (i = 0; i < 90; i++) {
-		number[i].set_label(boost::lexical_cast<std::string>(i + 1));
+		number[i].set_text(boost::lexical_cast<std::string>(i + 1));
+		number[i].set_editable(false);
 		number[i].set_sensitive(false);
 		number[i].override_font(Pango::FontDescription("Monospace 24"));
+		number[i].set_width_chars(2);
+		number[i].set_alignment(Gtk::ALIGN_CENTER);
 		card_grid[get_card(i)].attach(number[i], get_card_column(i), get_card_row(i), 1, 1);
 	}
 	for (i = 0; i < 6; i++) {
-		card_grid[i].set_border_width(2);
-		card_grid[i].set_row_spacing(10);
-		card_grid[i].set_column_spacing(10);
+		card_grid[i].set_border_width(4);
+		card_grid[i].set_row_spacing(8);
+		card_grid[i].set_column_spacing(8);
 		card_grid[i].set_column_homogeneous(true);
 
 		card_frame[i].add(card_grid[i]);
-		card_frame[i].set_border_width(1);
-		card_frame[i].set_label(boost::lexical_cast<std::string>(i + 1));
+		card_frame[i].set_border_width(2);
+		card_frame[i].set_label("Cartella " + boost::lexical_cast<std::string>(i + 1));
 		card_frame[i].set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
 		outer_grid.attach(card_frame[i], i % 2, i / 2, 1, 1);
 	}
@@ -128,16 +138,15 @@ tombola_window::tombola_window()
 	current_number.set_editable(false);
 	current_number.set_sensitive(false);
 	current_number.override_font(Pango::FontDescription("Monospace 24"));
+	current_number.override_color(Gdk::RGBA("Black"));
 	current_number.set_width_chars(2);
-	current_number.set_alignment(Gtk::ALIGN_END);
+	current_number.set_alignment(Gtk::ALIGN_CENTER);
 	command_box.pack_start(extract, Gtk::PACK_SHRINK);
 	command_box.pack_start(current_number, Gtk::PACK_SHRINK);
 
 	main_box.pack_start(outer_grid, Gtk::PACK_SHRINK);
 	main_box.pack_start(command_box, Gtk::PACK_SHRINK);
 	m_Application_Box.pack_start(main_box, Gtk::PACK_SHRINK);
-	status_bar.push("Tombola");
-	m_Application_Box.pack_end(status_bar, Gtk::PACK_SHRINK);
 
 	show_all_children();
 }
@@ -163,7 +172,10 @@ void tombola_window::on_action_file_start()
 		delete the_numbers;
 		the_numbers = 0;
 		the_numbers = new bingo();
-		for (unsigned short i = 0; i < 90; i++) number[i].set_sensitive(false);
+		for (unsigned short i = 0; i < 90; i++) {
+			number[i].unset_color();
+			number[i].unset_background_color();
+		}
 		extract.set_sensitive(true);
 		current_number.set_text("");
 	}
@@ -182,15 +194,24 @@ void tombola_window::on_extract_button_clicked()
 {
 	unsigned short i;
 
+	if (timer.elapsed() < 1) return;
 	if (the_numbers->has_next()) {
 		i = the_numbers->get_next();
-		number[i].set_sensitive(true);
-		number[i].override_color(Gdk::RGBA("Red"));
+#ifdef HAVE_DEBUG
+		std::cout << number[i].get_state_flags() << ":";
+#endif
+		number[i].override_color(Gdk::RGBA("Black"));
+		number[i].override_background_color(number_color[get_card(i)]);
 		current_number.set_text(boost::lexical_cast<std::string>(i + 1));
+#ifdef HAVE_DEBUG
+		std::cout << number[i].get_state_flags() << std::endl;
+#endif
+		timer.reset();
 	}
-	else {
-		extract.set_sensitive(false);
-	}
+	else extract.set_sensitive(false);
 }
 
 const std::string tombola_window::window_title = "Tombola";
+
+const Gdk::RGBA tombola_window::number_color[6] = {Gdk::RGBA("Red"), Gdk::RGBA("Blue"), Gdk::RGBA("Green"),
+	Gdk::RGBA("Orange"), Gdk::RGBA("Yellow"), Gdk::RGBA("Purple")};
