@@ -22,7 +22,13 @@
 #endif
 
 #include <iostream>
+
+#ifdef HAVE_BOOST_LEXICAL_CAST_HPP
 #include <boost/lexical_cast.hpp>
+#else
+#error We need boost lexical_cast
+#endif
+
 #include "window.h"
 #include "about.h"
 
