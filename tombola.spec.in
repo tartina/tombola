@@ -1,0 +1,51 @@
+Name:           @PACKAGE_NAME@
+Version:        @PACKAGE_VERSION@
+Release:        1
+Summary:        The classical Bingo game
+Group:          Amusements/Games
+Packager:       Guido Aulisi
+Vendor:         Heavyware
+
+License:        GPLv3+
+URL:            @PACKAGE_URL@
+Source0:        %{name}-%{version}.tar.gz
+
+BuildRequires:  gtkmm30-devel >= 3.8
+BuildRequires:  boost-devel >= 1.53
+
+%description
+@PACKAGE_NAME@ is a classical Bingo game.
+
+%prep
+%setup -q
+
+%build
+%configure
+make %{?_smp_mflags}
+
+%install
+rm -rf %{buildroot}
+%make_install
+
+%post
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+
+%postun
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+fi
+
+%posttrans
+/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+
+%files
+%doc README COPYING AUTHORS
+%{_bindir}/*
+%{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
+%{_datadir}/icons/hicolor/128x128/apps/%{name}.png
+
+%changelog
+* Tue Dec 30 2014 Guido Aulisi <guido.aulisi@gmail.com> - 0.1-1
+- First version
