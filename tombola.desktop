@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Tombola
+Comment=Tombola is a bingo like game
+Categories=Game
+Exec=tombola
+Icon=tombola
+Terminal=false
