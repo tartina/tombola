@@ -99,7 +99,7 @@ tombola_window::tombola_window()
 	for (i = 0; i < 90; i++) {
 		number[i].set_label(boost::lexical_cast<std::string>(i + 1));
 		number[i].set_sensitive(false);
-		number[i].override_font(Pango::FontDescription("Monospace 20"));
+		number[i].override_font(Pango::FontDescription("Monospace 24"));
 		card_grid[get_card(i)].attach(number[i], get_card_column(i), get_card_row(i), 1, 1);
 	}
 	for (i = 0; i < 6; i++) {
@@ -121,7 +121,7 @@ tombola_window::tombola_window()
 		&tombola_window::on_extract_button_clicked));
 	current_number.set_editable(false);
 	current_number.set_sensitive(false);
-	current_number.override_font(Pango::FontDescription("Monospace 20"));
+	current_number.override_font(Pango::FontDescription("Monospace 24"));
 	current_number.set_width_chars(2);
 	current_number.set_alignment(Gtk::ALIGN_END);
 	command_box.pack_start(extract, Gtk::PACK_SHRINK);
@@ -159,6 +159,7 @@ void tombola_window::on_action_file_start()
 		the_numbers = new bingo();
 		for (unsigned short i = 0; i < 90; i++) number[i].set_sensitive(false);
 		extract.set_sensitive(true);
+		current_number.set_text("");
 	}
 	delete dialog;
 }
