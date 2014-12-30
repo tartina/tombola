@@ -47,6 +47,7 @@ class tombola_window : public Gtk::ApplicationWindow
 		Gtk::Grid card_grid[6];
 		Gtk::Button number[90];
 		Gtk::Button extract;
+		Gtk::Entry current_number;
 
 		inline unsigned short get_card(unsigned short n) {return (n / 30) * 2 + (n % 10) / 5;};
 		inline unsigned short get_card_column(unsigned short n) {return n % 5;};

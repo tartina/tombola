@@ -28,8 +28,8 @@
 
 tombola_window::tombola_window()
 	: m_Application_Box(Gtk::ORIENTATION_VERTICAL),
-	main_box(Gtk::ORIENTATION_HORIZONTAL),
-	command_box(Gtk::ORIENTATION_VERTICAL),
+	main_box(Gtk::ORIENTATION_HORIZONTAL, 5),
+	command_box(Gtk::ORIENTATION_VERTICAL, 5),
 	extract("Estrai")
 {
 	unsigned short i;
@@ -99,7 +99,7 @@ tombola_window::tombola_window()
 	for (i = 0; i < 90; i++) {
 		number[i].set_label(boost::lexical_cast<std::string>(i + 1));
 		number[i].set_sensitive(false);
-		number[i].override_font(Pango::FontDescription("Monospace 16"));
+		number[i].override_font(Pango::FontDescription("Monospace 20"));
 		card_grid[get_card(i)].attach(number[i], get_card_column(i), get_card_row(i), 1, 1);
 	}
 	for (i = 0; i < 6; i++) {
@@ -119,7 +119,13 @@ tombola_window::tombola_window()
 
 	extract.signal_clicked().connect(sigc::mem_fun(*this,
 		&tombola_window::on_extract_button_clicked));
+	current_number.set_editable(false);
+	current_number.set_sensitive(false);
+	current_number.override_font(Pango::FontDescription("Monospace 20"));
+	current_number.set_width_chars(2);
+	current_number.set_alignment(Gtk::ALIGN_END);
 	command_box.pack_start(extract, Gtk::PACK_SHRINK);
+	command_box.pack_start(current_number, Gtk::PACK_SHRINK);
 
 	main_box.pack_start(outer_grid, Gtk::PACK_SHRINK);
 	main_box.pack_start(command_box, Gtk::PACK_SHRINK);
@@ -173,6 +179,7 @@ void tombola_window::on_extract_button_clicked()
 		i = the_numbers->get_next();
 		number[i].set_sensitive(true);
 		number[i].override_color(Gdk::RGBA("Red"));
+		current_number.set_text(boost::lexical_cast<std::string>(i + 1));
 	}
 	else {
 		extract.set_sensitive(false);
