@@ -39,7 +39,8 @@
 tombola_window::tombola_window()
 	: m_Application_Box(Gtk::ORIENTATION_VERTICAL),
 	main_box(Gtk::ORIENTATION_HORIZONTAL, 2),
-	command_box(Gtk::ORIENTATION_VERTICAL, 2),
+	command_box(Gtk::ORIENTATION_VERTICAL, 4),
+	command_frame("Estrazione"),
 	extract("Estrai")
 {
 	unsigned short i;
@@ -133,19 +134,28 @@ tombola_window::tombola_window()
 	outer_grid.set_row_spacing(5);
 	outer_grid.set_column_spacing(5);
 
+	command_frame.set_border_width(2);
+	command_frame.set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
+
 	extract.signal_clicked().connect(sigc::mem_fun(*this,
 		&tombola_window::on_extract_button_clicked));
-	current_number.set_editable(false);
-	current_number.set_sensitive(false);
-	current_number.override_font(Pango::FontDescription("Monospace 24"));
-	current_number.override_color(Gdk::RGBA("Black"));
-	current_number.set_width_chars(2);
-	current_number.set_alignment(Gtk::ALIGN_CENTER);
+
+	for (i = 0; i < 4; i++) {
+		current_number[i].set_editable(false);
+		current_number[i].set_sensitive(false);
+		current_number[i].override_font(Pango::FontDescription("Monospace 24"));
+		current_number[i].override_color(Gdk::RGBA("Black"));
+		current_number[i].override_background_color(Gdk::RGBA("LightGray"));
+		current_number[i].set_width_chars(2);
+		current_number[i].set_alignment(Gtk::ALIGN_CENTER);
+		command_box.pack_start(current_number[i], Gtk::PACK_SHRINK);
+	}
+	command_box.set_border_width(4);
 	command_box.pack_start(extract, Gtk::PACK_SHRINK);
-	command_box.pack_start(current_number, Gtk::PACK_SHRINK);
+	command_frame.add(command_box);
 
 	main_box.pack_start(outer_grid, Gtk::PACK_SHRINK);
-	main_box.pack_start(command_box, Gtk::PACK_SHRINK);
+	main_box.pack_start(command_frame, Gtk::PACK_SHRINK);
 	m_Application_Box.pack_start(main_box, Gtk::PACK_SHRINK);
 
 	show_all_children();
@@ -159,6 +169,7 @@ tombola_window::~tombola_window()
 
 void tombola_window::on_action_file_start()
 {
+	unsigned short i;
 	Gtk::MessageDialog* dialog;
 	int result;
 
@@ -172,12 +183,12 @@ void tombola_window::on_action_file_start()
 		delete the_numbers;
 		the_numbers = 0;
 		the_numbers = new bingo();
-		for (unsigned short i = 0; i < 90; i++) {
+		for (i = 0; i < 90; i++) {
 			number[i].unset_color();
 			number[i].unset_background_color();
 		}
 		extract.set_sensitive(true);
-		current_number.set_text("");
+		for (i = 0; i < 4; i++) current_number[i].set_text("");
 	}
 	delete dialog;
 }
@@ -192,7 +203,7 @@ void tombola_window::on_action_help_about()
 
 void tombola_window::on_extract_button_clicked()
 {
-	unsigned short i;
+	unsigned short i, k;
 
 	if (timer.elapsed() < 1) return;
 	if (the_numbers->has_next()) {
@@ -202,7 +213,11 @@ void tombola_window::on_extract_button_clicked()
 #endif
 		number[i].override_color(Gdk::RGBA("Black"));
 		number[i].override_background_color(number_color[get_card(i)]);
-		current_number.set_text(boost::lexical_cast<std::string>(i + 1));
+
+		for (k = 3; k > 0; k--)
+			current_number[k].set_text(current_number[k - 1].get_text());
+		current_number[0].set_text(boost::lexical_cast<std::string>(i + 1));
+
 #ifdef HAVE_DEBUG
 		std::cout << number[i].get_state_flags() << std::endl;
 #endif

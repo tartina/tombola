@@ -45,9 +45,10 @@ class tombola_window : public Gtk::ApplicationWindow
 		Gtk::Frame card_frame[6];
 		Gtk::Grid card_grid[6];
 		Gtk::Entry number[90];
-		Gtk::Button extract;
-		Gtk::Entry current_number;
+		Gtk::Entry current_number[4];
 		Glib::Timer timer;
+		Gtk::Frame command_frame;
+		Gtk::Button extract;
 
 		static const Gdk::RGBA number_color[6];
 
