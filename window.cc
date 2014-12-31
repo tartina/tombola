@@ -41,10 +41,15 @@ tombola_window::tombola_window()
 	main_box(Gtk::ORIENTATION_HORIZONTAL, 2),
 	command_box(Gtk::ORIENTATION_VERTICAL, 4),
 	command_frame("Estrazione"),
-	extract("Estrai")
+	extract("Estrai"),
+	separator(Gtk::ORIENTATION_HORIZONTAL),
+	win_label("Vincita")
 {
 	unsigned short i;
 	Gtk::IconInfo icon_info;
+	Gtk::RadioButton::Group group;
+
+	win_status = 0;
 
 	try {
 		icon_theme = Gtk::IconTheme::get_default();
@@ -140,7 +145,7 @@ tombola_window::tombola_window()
 	extract.signal_clicked().connect(sigc::mem_fun(*this,
 		&tombola_window::on_extract_button_clicked));
 
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < 5; i++) {
 		current_number[i].set_editable(false);
 		current_number[i].set_sensitive(false);
 		current_number[i].override_font(Pango::FontDescription("Monospace 24"));
@@ -152,6 +157,25 @@ tombola_window::tombola_window()
 	}
 	command_box.set_border_width(4);
 	command_box.pack_start(extract, Gtk::PACK_SHRINK);
+	command_box.pack_start(separator, Gtk::PACK_SHRINK);
+	command_box.pack_start(win_label, Gtk::PACK_SHRINK);
+
+	group = win[0].get_group();
+	for (i = 1; i < 6; i++) win[i].set_group(group);
+	for (i = 2; i < 6; i++) win[i].set_sensitive(false);
+
+	win[0].set_label("Nessuna");
+	win[1].set_label("Ambo");
+	win[2].set_label("Terno");
+	win[3].set_label("Quaterna");
+	win[4].set_label("Cinquina");
+	win[5].set_label("Tombola");
+	for (i = 0; i < 6; i++) {
+		win[i].signal_clicked().connect(sigc::bind<unsigned short>(sigc::mem_fun(*this,
+			&tombola_window::on_win_button_clicked), i));
+		command_box.pack_start(win[i], Gtk::PACK_SHRINK);
+	}
+
 	command_frame.add(command_box);
 
 	main_box.pack_start(outer_grid, Gtk::PACK_SHRINK);
@@ -188,7 +212,13 @@ void tombola_window::on_action_file_start()
 			number[i].unset_background_color();
 		}
 		extract.set_sensitive(true);
-		for (i = 0; i < 4; i++) current_number[i].set_text("");
+		for (i = 0; i < 5; i++) current_number[i].set_text("");
+
+		win_status = 0;
+		win[0].set_active(true);
+		win[0].set_sensitive(true);
+		win[1].set_sensitive(true);
+		for (i = 2; i < 6; i++) win[i].set_sensitive(false);
 	}
 	delete dialog;
 }
@@ -214,7 +244,7 @@ void tombola_window::on_extract_button_clicked()
 		number[i].override_color(Gdk::RGBA("Black"));
 		number[i].override_background_color(number_color[get_card(i)]);
 
-		for (k = 3; k > 0; k--)
+		for (k = 4; k > 0; k--)
 			current_number[k].set_text(current_number[k - 1].get_text());
 		current_number[0].set_text(boost::lexical_cast<std::string>(i + 1));
 
@@ -224,6 +254,16 @@ void tombola_window::on_extract_button_clicked()
 		timer.reset();
 	}
 	else extract.set_sensitive(false);
+}
+
+void tombola_window::on_win_button_clicked(unsigned short index)
+{
+	if (win[index].get_active()) {
+		if (index != win_status +1) return; // Something got wrong
+		win[win_status].set_sensitive(false);
+		win_status++;
+		if (index < 5) win[index + 1].set_sensitive(true);
+	}
 }
 
 const std::string tombola_window::window_title = "Tombola";

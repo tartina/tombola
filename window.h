@@ -25,41 +25,46 @@
 
 class tombola_window : public Gtk::ApplicationWindow
 {
-	public:
-		tombola_window();
-		virtual ~tombola_window();
-		static const std::string window_title;
+public:
+	tombola_window();
+	virtual ~tombola_window();
+	static const std::string window_title;
 
-	private:
-		bingo *the_numbers;
+private:
+	bingo *the_numbers;
+	unsigned short win_status;
 
-		Glib::RefPtr<Gtk::IconTheme> icon_theme;
+	Glib::RefPtr<Gtk::IconTheme> icon_theme;
 
-		Glib::RefPtr<Gtk::ActionGroup> m_refActionGroup;
-		Glib::RefPtr<Gtk::UIManager> m_refUIManager;
+	Glib::RefPtr<Gtk::ActionGroup> m_refActionGroup;
+	Glib::RefPtr<Gtk::UIManager> m_refUIManager;
 
-		Gtk::Box m_Application_Box;
-		Gtk::Box main_box;
-		Gtk::Box command_box;
-		Gtk::Grid outer_grid;
-		Gtk::Frame card_frame[6];
-		Gtk::Grid card_grid[6];
-		Gtk::Entry number[90];
-		Gtk::Entry current_number[4];
-		Glib::Timer timer;
-		Gtk::Frame command_frame;
-		Gtk::Button extract;
+	Gtk::Box m_Application_Box;
+	Gtk::Box main_box;
+	Gtk::Box command_box;
+	Gtk::Grid outer_grid;
+	Gtk::Frame card_frame[6];
+	Gtk::Grid card_grid[6];
+	Gtk::Entry number[90];
+	Gtk::Entry current_number[5];
+	Glib::Timer timer;
+	Gtk::Frame command_frame;
+	Gtk::Button extract;
+	Gtk::Separator separator;
+	Gtk::RadioButton win[6];
+	Gtk::Label win_label;
 
-		static const Gdk::RGBA number_color[6];
+	static const Gdk::RGBA number_color[6];
 
-		inline unsigned short get_card(unsigned short n) {return (n / 30) * 2 + (n % 10) / 5;};
-		inline unsigned short get_card_column(unsigned short n) {return n % 5;};
-		inline unsigned short get_card_row(unsigned short n) {return (n / 10) % 3;};
+	inline unsigned short get_card(unsigned short n) {return (n / 30) * 2 + (n % 10) / 5;};
+	inline unsigned short get_card_column(unsigned short n) {return n % 5;};
+	inline unsigned short get_card_row(unsigned short n) {return (n / 10) % 3;};
 
-		// Signal handlers
-		void on_action_file_start();
-		void inline on_action_file_quit() {hide();};
-		void on_action_help_about();
-		void on_extract_button_clicked();
+	// Signal handlers
+	void on_action_file_start();
+	void inline on_action_file_quit() {hide();};
+	void on_action_help_about();
+	void on_extract_button_clicked();
+	void on_win_button_clicked(unsigned short index);
 };
 #endif
