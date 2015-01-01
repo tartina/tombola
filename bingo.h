@@ -20,18 +20,27 @@
 #define TOMBOLA_BINGO_H
 
 #include <vector>
+#include <string>
 
 class bingo
 {
-	public:
-		bingo();
-		virtual ~bingo();
+public:
+	bingo();
+	virtual ~bingo();
 
-		bool has_next() const;
-		unsigned short get_next();
+	bool has_next() const;
+	unsigned short get_next();
+	unsigned short get_siblings() const {return siblings;};
 
-	private:
-		std::vector<unsigned short> *the_numbers;
-		unsigned short current;
+	static inline unsigned short get_card(unsigned short n) {return (n / 30) * 2 + (n % 10) / 5;};
+	static inline unsigned short get_card_column(unsigned short n) {return n % 5;};
+	static inline unsigned short get_card_row(unsigned short n) {return (n / 10) % 3;};
+
+	static const std::string name[6];
+
+private:
+	std::vector<unsigned short> *the_numbers;
+	std::vector<unsigned short>::const_iterator current;
+	unsigned short siblings;
 };
 #endif

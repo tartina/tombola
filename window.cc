@@ -122,7 +122,7 @@ tombola_window::tombola_window()
 		number[i].override_font(Pango::FontDescription("Monospace 24"));
 		number[i].set_width_chars(2);
 		number[i].set_alignment(Gtk::ALIGN_CENTER);
-		card_grid[get_card(i)].attach(number[i], get_card_column(i), get_card_row(i), 1, 1);
+		card_grid[bingo::get_card(i)].attach(number[i], bingo::get_card_column(i), bingo::get_card_row(i), 1, 1);
 	}
 	for (i = 0; i < 6; i++) {
 		card_grid[i].set_border_width(4);
@@ -176,6 +176,13 @@ tombola_window::tombola_window()
 		command_box.pack_start(win[i], Gtk::PACK_SHRINK);
 	}
 
+	current_win.set_editable(false);
+	current_win.set_sensitive(false);
+	current_win.set_width_chars(8);
+	current_win.override_color(Gdk::RGBA("Red"));
+	current_win.set_text(bingo::name[win_status]);
+	command_box.pack_start(current_win, Gtk::PACK_SHRINK);
+
 	command_frame.add(command_box);
 
 	main_box.pack_start(outer_grid, Gtk::PACK_SHRINK);
@@ -219,6 +226,8 @@ void tombola_window::on_action_file_start()
 		win[0].set_sensitive(true);
 		win[1].set_sensitive(true);
 		for (i = 2; i < 6; i++) win[i].set_sensitive(false);
+
+		current_win.set_text(bingo::name[win_status]);
 	}
 	delete dialog;
 }
@@ -233,24 +242,22 @@ void tombola_window::on_action_help_about()
 
 void tombola_window::on_extract_button_clicked()
 {
-	unsigned short i, k;
+	unsigned short i, k, siblings;
 
 	if (timer.elapsed() < 1) return;
 	if (the_numbers->has_next()) {
 		i = the_numbers->get_next();
-#ifdef HAVE_DEBUG
-		std::cout << number[i].get_state_flags() << ":";
-#endif
+
 		number[i].override_color(Gdk::RGBA("Black"));
-		number[i].override_background_color(number_color[get_card(i)]);
+		number[i].override_background_color(number_color[bingo::get_card(i)]);
 
 		for (k = 4; k > 0; k--)
 			current_number[k].set_text(current_number[k - 1].get_text());
 		current_number[0].set_text(boost::lexical_cast<std::string>(i + 1));
 
-#ifdef HAVE_DEBUG
-		std::cout << number[i].get_state_flags() << std::endl;
-#endif
+		siblings = the_numbers->get_siblings();
+		if (siblings > win_status) current_win.set_text(bingo::name[siblings]);
+
 		timer.reset();
 	}
 	else extract.set_sensitive(false);

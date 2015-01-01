@@ -33,17 +33,18 @@ bingo::bingo()
 {
 	unsigned short i;
 
+	siblings = 0;
+
 	std::srand(unsigned(std::time(0)));
 
-	current = 0;
 	the_numbers = new std::vector<unsigned short>;
-
 	for (i = 0; i < 90; i++) the_numbers->push_back(i);
 
-  std::random_shuffle(the_numbers->begin(), the_numbers->end());
+	std::random_shuffle(the_numbers->begin(), the_numbers->end());
+
+	current = the_numbers->begin();
 
 #ifdef HAVE_DEBUG
-  // print out content:
   std::cout << "Numeri tombola: ";
   for (std::vector<unsigned short>::iterator it=the_numbers->begin(); it!=the_numbers->end(); ++it)
     std::cout << ' ' << *it;
@@ -59,11 +60,30 @@ bingo::~bingo()
 
 bool bingo::has_next() const
 {
-	return current < 90;
+	return current != the_numbers->end();
 }
 
 unsigned short bingo::get_next()
 {
-	if (current < 90)	return the_numbers->at(current++);
+	unsigned short number, old;
+	unsigned short card, line;
+
+	siblings = 0;
+
+	if (has_next()) {
+		number = *current;
+		card = get_card(number);
+		line = get_card_row(number);
+
+		for (std::vector<unsigned short>::const_iterator i = the_numbers->begin(); i != current; i++) {
+			old = *i;
+			if (card == get_card(old))
+				if (line == get_card_row(old)) siblings++;
+		}
+		current++;
+		return (number);
+	}
 	else return 0;
 }
+
+const std::string bingo::name[6] = {"Nessuna", "Ambo", "Terno", "Quaterna", "Cinquina", "Tombola"};

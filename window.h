@@ -53,12 +53,9 @@ private:
 	Gtk::Separator separator;
 	Gtk::RadioButton win[6];
 	Gtk::Label win_label;
+	Gtk::Entry current_win;
 
 	static const Gdk::RGBA number_color[6];
-
-	inline unsigned short get_card(unsigned short n) {return (n / 30) * 2 + (n % 10) / 5;};
-	inline unsigned short get_card_column(unsigned short n) {return n % 5;};
-	inline unsigned short get_card_row(unsigned short n) {return (n / 10) % 3;};
 
 	// Signal handlers
 	void on_action_file_start();
