@@ -53,7 +53,6 @@ private:
 	Gtk::Separator separator;
 	Gtk::RadioButton win[6];
 	Gtk::Label win_label;
-	Gtk::Entry current_win;
 
 	static const Gdk::RGBA number_color[6];
 

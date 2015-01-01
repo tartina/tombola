@@ -171,13 +171,6 @@ tombola_window::tombola_window()
 		command_box.pack_start(win[i], Gtk::PACK_SHRINK);
 	}
 
-	current_win.set_editable(false);
-	current_win.set_sensitive(false);
-	current_win.set_width_chars(8);
-	current_win.override_color(Gdk::RGBA("Red"));
-	current_win.set_text(bingo::name[win_status]);
-	command_box.pack_start(current_win, Gtk::PACK_SHRINK);
-
 	command_frame.add(command_box);
 
 	main_box.pack_start(outer_grid, Gtk::PACK_SHRINK);
@@ -221,8 +214,6 @@ void tombola_window::on_action_file_start()
 		win[0].set_sensitive(true);
 		win[1].set_sensitive(true);
 		for (i = 2; i < 6; i++) win[i].set_sensitive(false);
-
-		current_win.set_text(bingo::name[0]);
 	}
 	delete dialog;
 }
@@ -252,12 +243,10 @@ void tombola_window::on_extract_button_clicked()
 
 		siblings = the_numbers->get_siblings();
 		if (siblings > win_status) {
-			current_win.set_text(bingo::name[siblings]);
 			win[siblings].set_active();
 			win_status = siblings;
 		}
 		if (the_numbers->is_bingo()) {
-			current_win.set_text(bingo::name[5]);
 			win[5].set_active();
 			win_status = 5;
 		}
