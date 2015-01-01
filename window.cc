@@ -164,13 +164,8 @@ tombola_window::tombola_window()
 	for (i = 1; i < 6; i++) win[i].set_group(group);
 	for (i = 2; i < 6; i++) win[i].set_sensitive(false);
 
-	win[0].set_label("Nessuna");
-	win[1].set_label("Ambo");
-	win[2].set_label("Terno");
-	win[3].set_label("Quaterna");
-	win[4].set_label("Cinquina");
-	win[5].set_label("Tombola");
 	for (i = 0; i < 6; i++) {
+		win[i].set_label(bingo::name[i]);
 		win[i].signal_clicked().connect(sigc::bind<unsigned short>(sigc::mem_fun(*this,
 			&tombola_window::on_win_button_clicked), i));
 		command_box.pack_start(win[i], Gtk::PACK_SHRINK);
@@ -227,7 +222,7 @@ void tombola_window::on_action_file_start()
 		win[1].set_sensitive(true);
 		for (i = 2; i < 6; i++) win[i].set_sensitive(false);
 
-		current_win.set_text(bingo::name[win_status]);
+		current_win.set_text(bingo::name[0]);
 	}
 	delete dialog;
 }
@@ -256,7 +251,16 @@ void tombola_window::on_extract_button_clicked()
 		current_number[0].set_text(boost::lexical_cast<std::string>(i + 1));
 
 		siblings = the_numbers->get_siblings();
-		if (siblings > win_status) current_win.set_text(bingo::name[siblings]);
+		if (siblings > win_status) {
+			current_win.set_text(bingo::name[siblings]);
+			win[siblings].set_active();
+			win_status = siblings;
+		}
+		if (the_numbers->is_bingo()) {
+			current_win.set_text(bingo::name[5]);
+			win[5].set_active();
+			win_status = 5;
+		}
 
 		timer.reset();
 	}

@@ -31,6 +31,7 @@ public:
 	bool has_next() const;
 	unsigned short get_next();
 	unsigned short get_siblings() const {return siblings;};
+	bool is_bingo() const;
 
 	static inline unsigned short get_card(unsigned short n) {return (n / 30) * 2 + (n % 10) / 5;};
 	static inline unsigned short get_card_column(unsigned short n) {return n % 5;};
@@ -42,5 +43,6 @@ private:
 	std::vector<unsigned short> *the_numbers;
 	std::vector<unsigned short>::const_iterator current;
 	unsigned short siblings;
+	unsigned short neighbours;
 };
 #endif

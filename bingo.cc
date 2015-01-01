@@ -69,6 +69,7 @@ unsigned short bingo::get_next()
 	unsigned short card, line;
 
 	siblings = 0;
+	neighbours = 0;
 
 	if (has_next()) {
 		number = *current;
@@ -77,13 +78,20 @@ unsigned short bingo::get_next()
 
 		for (std::vector<unsigned short>::const_iterator i = the_numbers->begin(); i != current; i++) {
 			old = *i;
-			if (card == get_card(old))
+			if (card == get_card(old)) {
+				neighbours++;
 				if (line == get_card_row(old)) siblings++;
+			}
 		}
 		current++;
 		return (number);
 	}
 	else return 0;
+}
+
+bool bingo::is_bingo() const
+{
+	return neighbours == 14;
 }
 
 const std::string bingo::name[6] = {"Nessuna", "Ambo", "Terno", "Quaterna", "Cinquina", "Tombola"};
