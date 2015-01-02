@@ -264,6 +264,35 @@ void tombola_window::on_win_button_clicked(unsigned short index)
 	}
 }
 
+bool tombola_window::confirm_quit()
+{
+	Gtk::MessageDialog* dialog;
+	int result;
+
+	dialog = new Gtk::MessageDialog("Chiudo il programmma?", false,
+                               Gtk::MESSAGE_QUESTION,
+                               Gtk::BUTTONS_OK_CANCEL,
+                               true);
+	dialog->set_transient_for(*this);
+	result = dialog->run();
+	delete dialog;
+	return result == Gtk::RESPONSE_OK;
+}
+
+void tombola_window::on_action_file_quit()
+{
+	if (win_status < 5) { // The game is not finished
+		if (confirm_quit()) hide();
+	} else hide();
+}
+
+bool tombola_window::on_delete_event(GdkEventAny* event)
+{
+	if (win_status < 5) // The game is not finished
+		return ! confirm_quit();
+	else return false;
+}
+
 const std::string tombola_window::window_title = "Tombola";
 
 const Gdk::RGBA tombola_window::number_color[6] = {Gdk::RGBA("Red"), Gdk::RGBA("Blue"), Gdk::RGBA("Green"),

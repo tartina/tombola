@@ -30,6 +30,9 @@ public:
 	virtual ~tombola_window();
 	static const std::string window_title;
 
+protected:
+	bool on_delete_event(GdkEventAny* event);
+
 private:
 	bingo *the_numbers;
 	unsigned short win_status;
@@ -59,7 +62,8 @@ private:
 
 	// Signal handlers
 	void on_action_file_start();
-	void inline on_action_file_quit() {hide();};
+	bool confirm_quit();
+	void on_action_file_quit();
 	void on_action_help_about();
 	void on_action_file_extract();
 	void on_win_button_clicked(unsigned short index);
