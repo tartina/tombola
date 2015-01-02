@@ -47,5 +47,5 @@ fi
 %{_datadir}/icons/hicolor/128x128/apps/%{name}.png
 
 %changelog
-* Tue Dec 30 2014 Guido Aulisi <guido.aulisi@gmail.com> - 0.3-1
+* Tue Dec 30 2014 Guido Aulisi <guido.aulisi@gmail.com> - 0.4-1
 - First version
