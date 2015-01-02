@@ -41,7 +41,6 @@ tombola_window::tombola_window()
 	main_box(Gtk::ORIENTATION_HORIZONTAL, 2),
 	command_box(Gtk::ORIENTATION_VERTICAL, 4),
 	command_frame("Estrazione"),
-	extract("Estrai"),
 	separator(Gtk::ORIENTATION_HORIZONTAL),
 	win_label("Vincita")
 {
@@ -83,8 +82,8 @@ tombola_window::tombola_window()
 	m_refActionGroup->add( Gtk::Action::create("MenuFile", "_Programma") );
 	m_refActionGroup->add( Gtk::Action::create("Inizia", "_Inizia"),
 		sigc::mem_fun(*this, &tombola_window::on_action_file_start) );
-	m_refActionGroup->add( Gtk::Action::create("Estrai", "_Estrai"),
-		sigc::mem_fun(*this, &tombola_window::on_extract_button_clicked) );
+	m_refActionGroup->add( extract_action = Gtk::Action::create("Estrai", "_Estrai"),
+		sigc::mem_fun(*this, &tombola_window::on_action_file_extract) );
 	m_refActionGroup->add( Gtk::Action::create("Esci", "E_sci"),
 		sigc::mem_fun(*this, &tombola_window::on_action_file_quit) );
 	m_refActionGroup->add( Gtk::Action::create("MenuHelp", "_Aiuto") );
@@ -142,8 +141,7 @@ tombola_window::tombola_window()
 	command_frame.set_border_width(2);
 	command_frame.set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
 
-	extract.signal_clicked().connect(sigc::mem_fun(*this,
-		&tombola_window::on_extract_button_clicked));
+	extract.set_related_action(extract_action);
 
 	for (i = 0; i < 5; i++) {
 		current_number[i].set_editable(false);
@@ -226,7 +224,7 @@ void tombola_window::on_action_help_about()
 	delete dialog;
 }
 
-void tombola_window::on_extract_button_clicked()
+void tombola_window::on_action_file_extract()
 {
 	unsigned short i, k, siblings;
 
@@ -253,7 +251,7 @@ void tombola_window::on_extract_button_clicked()
 
 		timer.reset();
 	}
-	else extract.set_sensitive(false);
+	else extract_action->set_sensitive(false);
 }
 
 void tombola_window::on_win_button_clicked(unsigned short index)

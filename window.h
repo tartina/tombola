@@ -53,6 +53,7 @@ private:
 	Gtk::Separator separator;
 	Gtk::RadioButton win[6];
 	Gtk::Label win_label;
+	Glib::RefPtr<Gtk::Action> extract_action;
 
 	static const Gdk::RGBA number_color[6];
 
@@ -60,7 +61,7 @@ private:
 	void on_action_file_start();
 	void inline on_action_file_quit() {hide();};
 	void on_action_help_about();
-	void on_extract_button_clicked();
+	void on_action_file_extract();
 	void on_win_button_clicked(unsigned short index);
 };
 #endif
