@@ -38,7 +38,7 @@ bingo::bingo()
 	std::srand(unsigned(std::time(0)));
 
 	the_numbers = new std::vector<unsigned short>;
-	for (i = 0; i < 90; i++) the_numbers->push_back(i);
+	for (i = 0; i < 90; ++i) the_numbers->push_back(i);
 
 	std::random_shuffle(the_numbers->begin(), the_numbers->end());
 
@@ -76,14 +76,14 @@ unsigned short bingo::get_next()
 		card = get_card(number);
 		line = get_card_row(number);
 
-		for (std::vector<unsigned short>::const_iterator i = the_numbers->begin(); i != current; i++) {
+		for (std::vector<unsigned short>::const_iterator i = the_numbers->begin(); i != current; ++i) {
 			old = *i;
 			if (card == get_card(old)) {
-				neighbours++;
-				if (line == get_card_row(old)) siblings++;
+				++neighbours;
+				if (line == get_card_row(old)) ++siblings;
 			}
 		}
-		current++;
+		++current;
 		return (number);
 	}
 	else return 0;

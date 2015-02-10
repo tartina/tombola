@@ -114,7 +114,7 @@ tombola_window::tombola_window()
 	Gtk::Widget* pMenubar = m_refUIManager->get_widget("/MenuBar");
 	m_Application_Box.pack_start(*pMenubar, Gtk::PACK_SHRINK);
 
-	for (i = 0; i < 90; i++) {
+	for (i = 0; i < 90; ++i) {
 		number[i].set_text(boost::lexical_cast<std::string>(i + 1));
 		number[i].set_editable(false);
 		number[i].set_sensitive(false);
@@ -123,7 +123,7 @@ tombola_window::tombola_window()
 		number[i].set_alignment(Gtk::ALIGN_CENTER);
 		card_grid[bingo::get_card(i)].attach(number[i], bingo::get_card_column(i), bingo::get_card_row(i), 1, 1);
 	}
-	for (i = 0; i < 6; i++) {
+	for (i = 0; i < 6; ++i) {
 		card_grid[i].set_border_width(4);
 		card_grid[i].set_row_spacing(8);
 		card_grid[i].set_column_spacing(8);
@@ -143,7 +143,7 @@ tombola_window::tombola_window()
 
 	extract.set_related_action(extract_action);
 
-	for (i = 0; i < 5; i++) {
+	for (i = 0; i < 5; ++i) {
 		current_number[i].set_editable(false);
 		current_number[i].set_sensitive(false);
 		current_number[i].override_font(Pango::FontDescription("Monospace 24"));
@@ -159,10 +159,10 @@ tombola_window::tombola_window()
 	command_box.pack_start(win_label, Gtk::PACK_SHRINK);
 
 	group = win[0].get_group();
-	for (i = 1; i < 6; i++) win[i].set_group(group);
-	for (i = 2; i < 6; i++) win[i].set_sensitive(false);
+	for (i = 1; i < 6; ++i) win[i].set_group(group);
+	for (i = 2; i < 6; ++i) win[i].set_sensitive(false);
 
-	for (i = 0; i < 6; i++) {
+	for (i = 0; i < 6; ++i) {
 		win[i].set_label(bingo::name[i]);
 		win[i].signal_clicked().connect(sigc::bind<unsigned short>(sigc::mem_fun(*this,
 			&tombola_window::on_win_button_clicked), i));
@@ -200,18 +200,18 @@ void tombola_window::on_action_file_start()
 		delete the_numbers;
 		the_numbers = 0;
 		the_numbers = new bingo();
-		for (i = 0; i < 90; i++) {
+		for (i = 0; i < 90; ++i) {
 			number[i].unset_color();
 			number[i].unset_background_color();
 		}
 		extract.set_sensitive(true);
-		for (i = 0; i < 5; i++) current_number[i].set_text("");
+		for (i = 0; i < 5; ++i) current_number[i].set_text("");
 
 		win_status = 0;
 		win[0].set_active(true);
 		win[0].set_sensitive(true);
 		win[1].set_sensitive(true);
-		for (i = 2; i < 6; i++) win[i].set_sensitive(false);
+		for (i = 2; i < 6; ++i) win[i].set_sensitive(false);
 	}
 	delete dialog;
 }
@@ -259,7 +259,7 @@ void tombola_window::on_win_button_clicked(unsigned short index)
 	if (win[index].get_active()) {
 		if (index != win_status +1) return; // Something got wrong
 		win[win_status].set_sensitive(false);
-		win_status++;
+		++win_status;
 		if (index < 5) win[index + 1].set_sensitive(true);
 	}
 }
