@@ -73,6 +73,7 @@ tombola_window::tombola_window()
 
 	the_numbers = new bingo();
 
+	set_default_size(640, 480);
 	set_title(window_title);
 	set_border_width(6);
 
@@ -116,7 +117,8 @@ tombola_window::tombola_window()
 
 	for (i = 0; i < 90; ++i) {
 		number[i].set_text(boost::lexical_cast<std::string>(i + 1));
-		number[i].set_editable(false);
+		number[i].override_background_color(Gdk::RGBA("LightGray"));
+		number[i].set_padding(1, 1);
 		number[i].set_sensitive(false);
 		number[i].override_font(Pango::FontDescription("Monospace 24"));
 		number[i].set_width_chars(2);
@@ -144,11 +146,11 @@ tombola_window::tombola_window()
 	extract.set_related_action(extract_action);
 
 	for (i = 0; i < 5; ++i) {
-		current_number[i].set_editable(false);
 		current_number[i].set_sensitive(false);
 		current_number[i].override_font(Pango::FontDescription("Monospace 24"));
 		current_number[i].override_color(Gdk::RGBA("Black"));
 		current_number[i].override_background_color(Gdk::RGBA("LightGray"));
+		current_number[i].set_padding(1, 1);
 		current_number[i].set_width_chars(2);
 		current_number[i].set_alignment(Gtk::ALIGN_CENTER);
 		command_box.pack_start(current_number[i], Gtk::PACK_SHRINK);
@@ -232,8 +234,8 @@ void tombola_window::on_action_file_extract()
 	if (the_numbers->has_next()) {
 		i = the_numbers->get_next();
 
+		number[i].override_background_color(number_color[bingo::get_card(i)], Gtk::STATE_FLAG_NORMAL);
 		number[i].override_color(Gdk::RGBA("Black"));
-		number[i].override_background_color(number_color[bingo::get_card(i)]);
 
 		for (k = 4; k > 0; k--)
 			current_number[k].set_text(current_number[k - 1].get_text());
