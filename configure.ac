@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([tombola], [0.4], [guido.aulisi@gmail.com],, [http://pinguino.linkpc.net])
+AC_INIT([tombola], [0.5], [guido.aulisi@gmail.com],, [http://pinguino.linkpc.net])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([main.cc])
 AC_CONFIG_HEADERS([config.h])
