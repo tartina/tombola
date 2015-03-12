@@ -73,7 +73,7 @@ tombola_window::tombola_window()
 
 	the_numbers = new bingo();
 
-	set_default_size(640, 480);
+	set_default_size(600, 400);
 	set_title(window_title);
 	set_border_width(6);
 
