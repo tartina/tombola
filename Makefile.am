@@ -1,3 +1,5 @@
+ACLOCAL_AMFLAGS = -I m4
+
 bin_PROGRAMS = tombola
 tombola_SOURCES = main.cc window.cc window.h about.cc about.h bingo.h bingo.cc
 

@@ -2,8 +2,9 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([tombola], [0.5], [guido.aulisi@gmail.com],, [http://pinguino.linkpc.net])
+AC_INIT([tombola], [0.6], [guido.aulisi@gmail.com],, [http://pinguino.linkpc.net])
 AM_INIT_AUTOMAKE
+AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([main.cc])
 AC_CONFIG_HEADERS([config.h])
 
@@ -18,6 +19,7 @@ PKG_CHECK_MODULES([gtkmm], [gtkmm-3.0 >= 3.8])
 # Checks for header files.
 AC_LANG_PUSH([C++])
 AC_CHECK_HEADERS(boost/lexical_cast.hpp, [], [AC_MSG_ERROR(You need the Boost libraries.)])
+AX_CXX_COMPILE_STDCXX_11([ext],[optional])
 AC_LANG_POP([C++])
 
 # Checks for typedefs, structures, and compiler characteristics.
