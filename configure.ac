@@ -18,8 +18,8 @@ PKG_CHECK_MODULES([gtkmm], [gtkmm-3.0 >= 3.8])
 
 # Checks for header files.
 AC_LANG_PUSH([C++])
-AC_CHECK_HEADERS(boost/lexical_cast.hpp, [], [AC_MSG_ERROR(You need the Boost libraries.)])
 AX_CXX_COMPILE_STDCXX_11([ext],[optional])
+AC_CHECK_HEADERS(boost/lexical_cast.hpp, [], [AC_MSG_ERROR(You need the Boost libraries.)])
 AC_LANG_POP([C++])
 
 # Checks for typedefs, structures, and compiler characteristics.
