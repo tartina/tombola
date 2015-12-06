@@ -37,7 +37,8 @@
 #include "about.h"
 
 tombola_window::tombola_window()
-	: m_Application_Box(Gtk::ORIENTATION_VERTICAL),
+	: win_status(0),
+	m_Application_Box(Gtk::ORIENTATION_VERTICAL),
 	main_box(Gtk::ORIENTATION_HORIZONTAL, 2),
 	command_box(Gtk::ORIENTATION_VERTICAL, 4),
 	command_frame("Estrazione"),
@@ -47,8 +48,6 @@ tombola_window::tombola_window()
 	unsigned short i;
 	Gtk::IconInfo icon_info;
 	Gtk::RadioButton::Group group;
-
-	win_status = 0;
 
 	try {
 		icon_theme = Gtk::IconTheme::get_default();
@@ -259,7 +258,7 @@ void tombola_window::on_action_file_extract()
 void tombola_window::on_win_button_clicked(unsigned short index)
 {
 	if (win[index].get_active()) {
-		if (index != win_status +1) return; // Something got wrong
+		if (index != win_status + 1) return; // Something got wrong
 		win[win_status].set_sensitive(false);
 		++win_status;
 		if (index < 5) win[index + 1].set_sensitive(true);

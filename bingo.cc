@@ -29,11 +29,9 @@
 #include <cstdlib>
 #include "bingo.h"
 
-bingo::bingo()
+bingo::bingo() : siblings(0), neighbours(0)
 {
 	unsigned short i;
-
-	siblings = 0;
 
 	std::srand(unsigned(std::time(0)));
 
