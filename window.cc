@@ -177,6 +177,9 @@ tombola_window::tombola_window()
 	m_Application_Box.pack_start(main_box, Gtk::PACK_SHRINK);
 
 	show_all_children();
+
+	dispatcher.connect(sigc::mem_fun(*this, &tombola_window::on_action_file_extract));
+	control.run(this);
 }
 
 tombola_window::~tombola_window()
@@ -292,6 +295,11 @@ bool tombola_window::on_delete_event(GdkEventAny* event)
 	if (win_status < 5) // The game is not finished
 		return ! confirm_quit();
 	else return false;
+}
+
+void tombola_window::call()
+{
+	dispatcher.emit();
 }
 
 const std::string tombola_window::window_title = "Tombola";

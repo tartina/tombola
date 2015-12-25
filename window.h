@@ -23,11 +23,14 @@
 #include <gtkmm.h>
 #include "bingo.h"
 
-class tombola_window : public Gtk::ApplicationWindow
+#include "remote.h"
+
+class tombola_window : public Gtk::ApplicationWindow, public callback
 {
 public:
 	tombola_window();
 	virtual ~tombola_window();
+	virtual void call();
 	static const std::string window_title;
 
 protected:
@@ -36,6 +39,7 @@ protected:
 private:
 	bingo *the_numbers;
 	unsigned short win_status;
+	remote control;
 
 	Glib::RefPtr<Gtk::IconTheme> icon_theme;
 
@@ -57,6 +61,7 @@ private:
 	Gtk::RadioButton win[6];
 	Gtk::Label win_label;
 	Glib::RefPtr<Gtk::Action> extract_action;
+	Glib::Dispatcher dispatcher;
 
 	static const Gdk::RGBA number_color[6];
 

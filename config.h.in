@@ -1,13 +1,31 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Define to 1 if you have the <boost/lexical_cast.hpp> header file. */
+/* Defined if the requested minimum BOOST version is satisfied */
+#undef HAVE_BOOST
+
+/* Define to 1 if you have <boost/asio.hpp> */
+#undef HAVE_BOOST_ASIO_HPP
+
+/* Define to 1 if you have <boost/bind.hpp> */
+#undef HAVE_BOOST_BIND_HPP
+
+/* Define to 1 if you have <boost/cast.hpp> */
+#undef HAVE_BOOST_CAST_HPP
+
+/* Define to 1 if you have <boost/lexical_cast.hpp> */
 #undef HAVE_BOOST_LEXICAL_CAST_HPP
+
+/* Define to 1 if you have <boost/system/error_code.hpp> */
+#undef HAVE_BOOST_SYSTEM_ERROR_CODE_HPP
 
 /* define if the compiler supports basic C++11 syntax */
 #undef HAVE_CXX11
 
 /* Enable debugging code */
 #undef HAVE_DEBUG
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
@@ -38,6 +56,9 @@
 
 /* Define to 1 if the system has the type `_Bool'. */
 #undef HAVE__BOOL
+
+/* Define to the sub-directory where libtool stores uninstalled libraries. */
+#undef LT_OBJDIR
 
 /* Name of package */
 #undef PACKAGE

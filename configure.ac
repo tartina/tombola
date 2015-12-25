@@ -11,15 +11,20 @@ AC_CONFIG_HEADERS([config.h])
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
+AC_PROG_LIBTOOL
+LT_INIT
 PKG_PROG_PKG_CONFIG
 
 # Checks for libraries.
 PKG_CHECK_MODULES([gtkmm], [gtkmm-3.0 >= 3.8])
+BOOST_REQUIRE([1.53.0])
+BOOST_CONVERSION
+BOOST_ASIO
+BOOST_BIND
 
 # Checks for header files.
 AC_LANG_PUSH([C++])
 AX_CXX_COMPILE_STDCXX_11([ext],[optional])
-AC_CHECK_HEADERS(boost/lexical_cast.hpp, [], [AC_MSG_ERROR(You need the Boost libraries.)])
 AC_LANG_POP([C++])
 
 # Checks for typedefs, structures, and compiler characteristics.
