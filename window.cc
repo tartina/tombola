@@ -38,6 +38,7 @@
 
 tombola_window::tombola_window()
 	: win_status(0),
+	control(this),
 	m_Application_Box(Gtk::ORIENTATION_VERTICAL),
 	main_box(Gtk::ORIENTATION_HORIZONTAL, 2),
 	command_box(Gtk::ORIENTATION_VERTICAL, 4),
@@ -179,7 +180,7 @@ tombola_window::tombola_window()
 	show_all_children();
 
 	dispatcher.connect(sigc::mem_fun(*this, &tombola_window::on_action_file_extract));
-	control.run(this);
+	control.run();
 }
 
 tombola_window::~tombola_window()
@@ -206,7 +207,7 @@ void tombola_window::on_action_file_start()
 		the_numbers = new bingo();
 		for (i = 0; i < 90; ++i) {
 			number[i].unset_color();
-			number[i].unset_background_color();
+			number[i].override_background_color(Gdk::RGBA("LightGray"));
 		}
 		extract.set_sensitive(true);
 		for (i = 0; i < 5; ++i) current_number[i].set_text("");

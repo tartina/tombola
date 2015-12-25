@@ -27,22 +27,32 @@
 using boost::asio::ip::udp;
 using Glib::Threads::Thread;
 
-remote::remote() : socket(ios, udp::endpoint(udp::v4(), 50000))
+remote::remote(callback *caller) : socket(ios)
 {
-	start_receive();
+	this->caller = caller;
+	try {
+		socket.open(udp::v4());
+		socket.bind(udp::endpoint(udp::v4(), 50000));
+		start_receive();
+	}
+	catch (const boost::system::system_error& service_error) {
+		std::cerr << "Errore: " << service_error.what() << std::endl;
+	}
 }
 
 remote::~remote()
 {
 	ios.stop();
-	thread->join();
+	if (thread) thread->join();
 }
 
-void remote::run(callback *caller)
+void remote::run()
 {
-	this->caller = caller;
 	try {
 		thread = Thread::create(boost::bind<void>(&boost::asio::io_service::run, &ios));
+	}
+	catch (const boost::system::system_error& service_error) {
+		std::cerr << service_error.what() << std::endl;
 	}
 	catch (const Glib::Threads::ThreadError& thread_error) {
 		std::cerr << thread_error.what() << std::endl;

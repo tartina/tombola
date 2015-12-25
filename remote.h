@@ -35,9 +35,9 @@ using Glib::Threads::Thread;
 class remote
 {
 public:
-	remote();
+	remote(callback *);
 	virtual ~remote();
-	void run(callback *);
+	void run();
 	sigc::signal<void> signal_extract;
 private:
 	udp::endpoint remote_endpoint;
@@ -45,7 +45,7 @@ private:
 	boost::asio::io_service ios;
 	udp::socket socket;
 	callback *caller;
-	Thread *thread;
+	Thread *thread = 0;
 	void start_receive();
 	void handle_receive(const boost::system::error_code& error, std::size_t);
 };
