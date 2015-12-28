@@ -20,6 +20,8 @@
 #include <config.h>
 #endif
 
+#ifdef HAVE_REMOTE
+
 #include <iostream>
 #include <boost/bind.hpp>
 #include "remote.h"
@@ -73,3 +75,5 @@ void remote::handle_receive(const boost::system::error_code& error, std::size_t)
 	}
 	start_receive();
 }
+
+#endif // HAVE_REMOTE

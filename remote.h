@@ -23,6 +23,8 @@
 #include <config.h>
 #endif
 
+#ifdef HAVE_REMOTE
+
 #include <sigc++/sigc++.h>
 #include <boost/asio.hpp>
 #include <glibmm.h>
@@ -50,4 +52,5 @@ private:
 	void handle_receive(const boost::system::error_code& error, std::size_t);
 };
 
+#endif // HAVE_REMOTE
 #endif

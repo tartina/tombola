@@ -38,7 +38,9 @@
 
 tombola_window::tombola_window()
 	: win_status(0),
+#ifdef HAVE_REMOTE
 	control(this),
+#endif
 	m_Application_Box(Gtk::ORIENTATION_VERTICAL),
 	main_box(Gtk::ORIENTATION_HORIZONTAL, 2),
 	command_box(Gtk::ORIENTATION_VERTICAL, 4),
@@ -179,8 +181,10 @@ tombola_window::tombola_window()
 
 	show_all_children();
 
+#ifdef HAVE_REMOTE
 	dispatcher.connect(sigc::mem_fun(*this, &tombola_window::on_action_file_extract));
 	control.run();
+#endif
 }
 
 tombola_window::~tombola_window()
@@ -298,10 +302,12 @@ bool tombola_window::on_delete_event(GdkEventAny* event)
 	else return false;
 }
 
+#ifdef HAVE_REMOTE
 void tombola_window::call()
 {
 	dispatcher.emit();
 }
+#endif
 
 const std::string tombola_window::window_title = "Tombola";
 
