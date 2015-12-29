@@ -39,6 +39,7 @@ remote::remote(callback *caller) : socket(ios)
 	}
 	catch (const boost::system::system_error& service_error) {
 		std::cerr << "Errore: " << service_error.what() << std::endl;
+		throw;
 	}
 }
 

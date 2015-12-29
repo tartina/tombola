@@ -51,7 +51,7 @@ private:
 	bingo *the_numbers;
 	unsigned short win_status;
 #ifdef HAVE_REMOTE
-	remote control;
+	remote *control;
 #endif
 
 	Glib::RefPtr<Gtk::IconTheme> icon_theme;

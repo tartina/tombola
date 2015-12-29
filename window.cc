@@ -29,18 +29,11 @@
 #error We need boost lexical_cast
 #endif
 
-#ifdef HAVE_DEBUG
-#include <iostream>
-#endif
-
 #include "window.h"
 #include "about.h"
 
 tombola_window::tombola_window()
 	: win_status(0),
-#ifdef HAVE_REMOTE
-	control(this),
-#endif
 	m_Application_Box(Gtk::ORIENTATION_VERTICAL),
 	main_box(Gtk::ORIENTATION_HORIZONTAL, 2),
 	command_box(Gtk::ORIENTATION_VERTICAL, 4),
@@ -182,13 +175,22 @@ tombola_window::tombola_window()
 	show_all_children();
 
 #ifdef HAVE_REMOTE
-	dispatcher.connect(sigc::mem_fun(*this, &tombola_window::on_action_file_extract));
-	control.run();
+	try {
+		control = new remote(this);
+		dispatcher.connect(sigc::mem_fun(*this, &tombola_window::on_action_file_extract));
+		control->run();
+	}
+	catch (...) {
+		std::cerr << "Errore: controllo remoto non disponibile" << std::endl;
+	}
 #endif
 }
 
 tombola_window::~tombola_window()
 {
+#ifdef HAVE_REMOTE
+	delete control;
+#endif
 	delete the_numbers;
 	the_numbers = 0;
 }
