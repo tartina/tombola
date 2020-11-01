@@ -26,6 +26,8 @@ class bingo
 {
 public:
 	bingo();
+	bingo(const bingo&) = delete;
+	bingo& operator=(const bingo&) = delete;
 	virtual ~bingo();
 
 	bool has_next() const;
