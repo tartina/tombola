@@ -215,7 +215,7 @@ void tombola_window::on_action_file_start()
 			number[i].unset_color();
 			number[i].override_background_color(Gdk::RGBA("LightGray"));
 		}
-		extract.set_sensitive(true);
+		extract_action->set_sensitive(true);
 		for (i = 0; i < 5; ++i) current_number[i].set_text("");
 
 		win_status = 0;
@@ -259,10 +259,10 @@ void tombola_window::on_action_file_extract()
 			win[5].set_active();
 			win_status = 5;
 		}
-
-		timer.reset();
 	}
 	else extract_action->set_sensitive(false);
+
+	timer.reset();
 }
 
 void tombola_window::on_win_button_clicked(unsigned short index)
