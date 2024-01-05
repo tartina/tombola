@@ -25,6 +25,7 @@
 #endif
 
 #include <algorithm>
+#include <random>
 #include <ctime>
 #include <cstdlib>
 #include "bingo.h"
@@ -33,12 +34,12 @@ bingo::bingo() : siblings(0), neighbours(0)
 {
 	unsigned short i;
 
-	std::srand(unsigned(std::time(0)));
-
 	the_numbers = new std::vector<unsigned short>;
 	for (i = 0; i < 90; ++i) the_numbers->push_back(i);
 
-	std::random_shuffle(the_numbers->begin(), the_numbers->end());
+	std::random_device rd;
+	std::mt19937 g(rd());
+	std::shuffle(the_numbers->begin(), the_numbers->end(), g);
 
 	current = the_numbers->begin();
 
