@@ -1,8 +1,8 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ([2.69])
-AC_INIT([tombola], [0.7], [guido.aulisi@gmail.com],, [http://pinguino.linkpc.net])
+AC_PREREQ([2.71])
+AC_INIT([tombola],[0.7],[guido.aulisi@gmail.com],[],[https://github.com/tartina/tombola])
 AM_INIT_AUTOMAKE
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([main.cc])
@@ -16,8 +16,6 @@ AC_PROG_CPP
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-AC_PROG_RANLIB
-AC_PROG_LIBTOOL
 LT_INIT
 PKG_PROG_PKG_CONFIG
 
@@ -30,7 +28,7 @@ BOOST_BIND
 
 # Checks for c++11
 AC_LANG_PUSH([C++])
-AX_CXX_COMPILE_STDCXX_11([ext],[optional])
+AX_CXX_COMPILE_STDCXX([11],[ext],[mandatory])
 AC_LANG_POP([C++])
 
 # Checks for typedefs, structures, and compiler characteristics.
